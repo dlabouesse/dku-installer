@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Manage the following options
+# -f : path to Dataiku installer (required)
+# -l : path to license file (optional)
 while getopts ":f:l:" option
 do
     case $option in
@@ -27,8 +30,9 @@ then
 fi
 
 VERSION=$(echo $DKUINSTALLER | cut -d'-' -f 3)
+VERSION=${VERSION%".tar.gz"}
 
-read -p "Are you sure you want to install dataiku $VERSION? " -n 1 -r
+read -p "Do you confirm the installation of Dataiku $VERSION? (y/n)" -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
@@ -71,7 +75,7 @@ else
     $DKUINSTALLER/installer.sh -t api -d dss_home_apinode -p $PORT_API -l ../$LICENSE
 fi
 
-echo -e "\nInstall completed!"
+echo -e "\n################# Install completed! #################\n"
 echo "Design node: http://localhost:$PORT_DESIGN (./$DKUDIR/dss_home/bin/dss start)"
 echo "Automation node: http://localhost:$PORT_AUTOMATION (./$DKUDIR/dss_home_automation/bin/dss start)"
 echo "API node: http://localhost:$PORT_API (./$DKUDIR/dss_home_apinode/bin/dss start)"
