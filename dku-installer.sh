@@ -75,9 +75,6 @@ else
     $DKUINSTALLER/installer.sh -t api -d dss_home_apinode -p $PORT_API -l ../$LICENSE
 fi
 
-echo -e "\n################# Install completed! #################\n"
-echo "Design node: http://localhost:$PORT_DESIGN (./$DKUDIR/dss_home/bin/dss start)"
-echo "Automation node: http://localhost:$PORT_AUTOMATION (./$DKUDIR/dss_home_automation/bin/dss start)"
-echo "API node: http://localhost:$PORT_API (./$DKUDIR/dss_home_apinode/bin/dss start)"
-
+echo -e "\n################# Installation of Dataiku $VERSION completed! #################\n"
+echo "You can now run ./dku-launcher.sh to start any of the installed nodes."
 exit 0
