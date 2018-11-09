@@ -7,11 +7,15 @@ The purpose of this script is to automatically install the following nodes of Da
 # How to use?
 This script accepts two input options:
 - **Dataiku installer**
+
 The path to the Dataiku installer in the `.tar.gz` format must be set using the `-f` option.
+
 `./dku-installer.sh -f dataiku-dss-5.0.5-osx.tar.gz`
 
 - **License file (optional)**
+
 The path to the licence file can be set using the `-l` option.
+
 `./dku-installer.sh -f dataiku-dss-5.0.5-osx.tar.gz -l license.json`
 
 # Running details
