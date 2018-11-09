@@ -31,3 +31,7 @@ Each node is installed on a port depending of the version of DSS and which is su
 - Design node: `00` (e.g `50300`)
 - Automation node: `10` (e.g `50310`)
 - API node: `20` (e.g `50320`)
+
+# More details
+- [Dataiku public releases](https://downloads.dataiku.com/public/dss/)
+- [Dataiku Reference doc](https://doc.dataiku.com/dss/latest/index.html)
