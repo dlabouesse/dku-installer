@@ -29,6 +29,11 @@ then
     exit 1
 fi
 
+if [ -z "$LICENSE" ]
+then
+    echo -e "No Dataiku license provided (-l option).\nSince the API node requires a license, you'll have to manage that manually."
+fi
+
 VERSION=$(echo $DKUINSTALLER | cut -d'-' -f 3)
 VERSION=${VERSION%".tar.gz"}
 
