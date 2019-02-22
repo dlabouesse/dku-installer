@@ -4,7 +4,11 @@ The purpose of `dku-installer.sh` script is to automatically install the followi
 - Automation node
 - API node
 
+![dku-installer.gif](./img/dku-installer.gif)
+
 Then the `dku-launcher.sh` scripts allow you to start and stop any nodes which have been installed using the installer script.
+
+![dku-launcher.gif](./img/dku-launcher.gif)
 
 # Installation & first use
 1. Go to your local folder where you want to install all the Dataiku versions.
