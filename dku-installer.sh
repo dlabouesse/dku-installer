@@ -1,11 +1,16 @@
 #!/bin/bash
 
 # Manage the following options
+# -d : path to DATA_DIR to copy (optional)
 # -f : path to Dataiku installer (required)
 # -l : path to license file (optional)
-while getopts ":f:l:" option
+
+while getopts ":f:l:d:" option
 do
     case $option in
+        d)
+            DKUDATADIR=$OPTARG
+            ;;
         f)
             DKUINSTALLER=$OPTARG
             ;;
@@ -29,9 +34,9 @@ then
     exit 1
 fi
 
-if [ -z "$LICENSE" ]
+if [ -z "$LICENSE" ] && [ -z "$DKUDATADIR" ]
 then
-    echo -e "No Dataiku license provided (-l option).\nSince the API node requires a license, you'll have to manage that manually."
+    echo -e "No Dataiku license nor DATA_DIR provided (-l or -d options).\nSince the API node requires a license, you'll have to manage that manually."
 fi
 
 VERSION=$(echo $DKUINSTALLER | cut -d'-' -f 3)
@@ -53,13 +58,12 @@ echo "Extracting $DKUINSTALLER..."
 tar zxf $DKUINSTALLER -C ./$DKUDIR
 cd $DKUDIR
 DKUINSTALLER=$(ls)
-echo $DKUINSTALLER
 
 PORT_DESIGN="$(echo "$VERSION" | tr -d .)00"
 PORT_AUTOMATION="$(echo "$VERSION" | tr -d .)10"
 PORT_API="$(echo "$VERSION" | tr -d .)20"
 
-if [ -z "$LICENSE" ]
+if [ -z "$LICENSE" ] && [ -z "$DKUDATADIR" ]
 then
     echo "Installing design node on port $PORT_DESIGN without license..."
     $DKUINSTALLER/installer.sh -d dss_home -p $PORT_DESIGN
@@ -69,6 +73,28 @@ then
 
     echo -e "\nInstalling api node on port $PORT_API without license..."
     $DKUINSTALLER/installer.sh -t api -d dss_home_apinode -p $PORT_API
+elif [ -z "$LICENSE" ]
+then
+    echo "Migrating $DKUDATADIR..."
+    cp -R ../$DKUDATADIR/dss_* . 
+    echo "Generating new installid..."
+    sed -i .backup "s/^installid[ ]=[ ]........................$/installid = $(date +%s | sha256sum | base64 | head -c 24 ; echo)/g" dss_home/install.ini
+    echo "Updating ports..."
+    sed -i "" "s/^port[ ]=[ ][[:digit:]][[:digit:]][[:digit:]][[:digit:]][[:digit:]]$/port = $PORT_DESIGN/g" dss_home/install.ini
+    echo "Updating design node on migrated DATA_DIR..."    
+    $DKUINSTALLER/installer.sh -d dss_home -u
+    echo "Generating new installid..."
+    sed -i .backup "s/^installid[ ]=[ ]........................$/installid = $(date +%s | sha256sum | base64 | head -c 24 ; echo)/g" dss_home_automation/install.ini
+    echo "Updating ports..."
+    sed -i "" "s/^port[ ]=[ ][[:digit:]][[:digit:]][[:digit:]][[:digit:]][[:digit:]]$/port = $PORT_AUTOMATION/g" dss_home_automation/install.ini
+    echo "Updating automation node on migrated DATA_DIR..."    
+    $DKUINSTALLER/installer.sh -t automation -d dss_home_automation -u
+    echo "Generating new installid..."
+    sed -i .backup "s/^installid[ ]=[ ]........................$/installid = $(date +%s | sha256sum | base64 | head -c 24 ; echo)/g" dss_home_apinode/install.ini
+    echo "Updating ports..."
+    sed -i "" "s/^port[ ]=[ ][[:digit:]][[:digit:]][[:digit:]][[:digit:]][[:digit:]]$/port = $PORT_API/g" dss_home_apinode/install.ini
+    echo "Updating api node on migrated DATA_DIR..."    
+    $DKUINSTALLER/installer.sh -t api -d dss_home_apinode -u
 else
     echo -e "Installing design node on port $PORT_DESIGN with license..."
     $DKUINSTALLER/installer.sh -d dss_home -p $PORT_DESIGN -l ../$LICENSE

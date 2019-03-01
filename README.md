@@ -1,8 +1,10 @@
 # Introduction
-The purpose of `dku-installer.sh` script is to automatically install the following nodes of Dataiku in one single command:
+The purpose of `dku-installer.sh` script is to automatically install the following Dataiku nodes in one single command:
 - Design node
 - Automation node
 - API node
+
+It has been designed to allow having multiple versions of each nodes on the same instance and can install the 3 nodes using either empty of migrated data directories.
 
 ![dku-installer.gif](./img/dku-installer.gif)
 
@@ -16,22 +18,29 @@ Then the `dku-launcher.sh` scripts allow you to start and stop any nodes which h
 3. Run the following commands to create symlinks from the git folder `ln -s dku-installer/dku-installer.sh dku-installer.sh && ln -s dku-installer/dku-launcher.sh dku-launcher.sh`
 4. Make sure you have the rights to run the scripts `chmod +x dku-installer/dku-installer.sh dku-installer/dku-launcher.sh`
 5. Copy any [Dataiku installer](https://downloads.dataiku.com/public/dss/) in the `.tar.gz` format in the current directory
-6. Run the installer `./dku-installer.sh -f dataiku-dss-5.0.3-osx.tar.gz` (See below for further details)
+6. Run the installer `./dku-installer.sh -f dataiku-dss-5.1.2-osx.tar.gz` (See below for further details)
 7. Then, start the nodes you want by running `./dku-launcher.sh`
 
 # How to use?
-The `dku-installer.sh` script accepts two input options:
+The `dku-installer.sh` script accepts the following input options:
 - **Dataiku installer**
 
 The path to the Dataiku installer in the `.tar.gz` format must be set using the `-f` option.
 
-`./dku-installer.sh -f dataiku-dss-5.0.5-osx.tar.gz`
+`./dku-installer.sh -f dataiku-dss-5.1.2-osx.tar.gz`
+
+- **`DATA_DIR` to migrate (optional)**
+
+The path to the `DATA_DIR` to migrate can be set using the `-d` option.
+
+`./dku-installer.sh -f dataiku-dss-5.1.2-osx.tar.gz -d DSS_5_1_1`
 
 - **License file (optional)**
 
 The path to the licence file can be set using the `-l` option.
+*There is no need to use this option when using `-d` since the license is already included in the `DATA_DIR` to migrate.*
 
-`./dku-installer.sh -f dataiku-dss-5.0.5-osx.tar.gz -l license.json`
+`./dku-installer.sh -f dataiku-dss-5.1.2-osx.tar.gz -l license.json`
 
 # Running details
 ## Directories
