@@ -51,10 +51,13 @@ Then, it will extract the installer in this folder, and install the 3 nodes usin
 - API node: `/DSS_$VERSION/dss_home_apinode`
 
 ## Ports
-Each node is installed on a port depending of the version of DSS and which is suffixed by the following number depending of the node:
-- Design node: `00` (e.g `50300`)
-- Automation node: `10` (e.g `50310`)
-- API node: `20` (e.g `50320`)
+Each node is installed on a port depending of the version of DSS and the instance type.
+
+- **Before Dataiku DSS 7.0.0**, instances ports are composed of the version number, suffixed by the following number depending of the instance type:
+    - Design node: `00` (e.g `50300`)
+    - Automation node: `10` (e.g `50310`)
+    - API node: `20` (e.g `50320`)
+- **Starting from Dataiku DSS 7.0.0**, instances ports are calculated incrementaly to fit all 10-ports consecutive slots from the port number 52000 to 60000.
 
 # More details
 - [Dataiku public releases](https://downloads.dataiku.com/public/dss/)
