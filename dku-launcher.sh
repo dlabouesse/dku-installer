@@ -67,7 +67,7 @@ do
             ./dss_home/bin/dss start
             echo "#########################################"
             echo "Design node started."
-            echo "The URL is: http://localhost:$(echo "$VERSION" | tr -d .)00"
+            echo "The URL is: http://localhost:$(cat dss_home/install.ini | grep port | awk '{print $NF}')"
             echo "#########################################"
             ;;
         "Automation")
@@ -75,7 +75,7 @@ do
             ./dss_home_automation/bin/dss start
             echo "#########################################"
             echo "Automation node started."
-            echo "The URL is: http://localhost:$(echo "$VERSION" | tr -d .)10"
+            echo "The URL is: http://localhost:$(cat dss_home_automation/install.ini | grep port | awk '{print $NF}')"
             echo "#########################################"
             ;;
         "API")
@@ -83,7 +83,7 @@ do
             ./dss_home_apinode/bin/dss start
             echo "#########################################"
             echo "API node started."
-            echo "The URL is: http://localhost:$(echo "$VERSION" | tr -d .)20"
+            echo "The URL is: http://localhost:$(cat dss_home_apinode/install.ini | grep port | awk '{print $NF}')"
             echo "#########################################"
             ;;
     esac

@@ -60,8 +60,31 @@ cd $DKUDIR
 DKUINSTALLER=$(ls)
 
 PORT_DESIGN="$(echo "$VERSION" | tr -d .)00"
-PORT_AUTOMATION="$(echo "$VERSION" | tr -d .)10"
-PORT_API="$(echo "$VERSION" | tr -d .)20"
+if [ $PORT_DESIGN -ge 65000 ] #dirty hack not to break old installs ports
+then
+    LAST_INSTALL="$(ls -t | grep DSS_ | head -n1)"
+    if [ -z "$LAST_INSTALL" ]
+    then
+        PORT_DESIGN="52000"
+        PORT_AUTOMATION="52010"
+        PORT_API="52020"
+    else
+        LAST_PORT="$(cat $(ls -t | grep DSS_ | head -n1)/dss_home/install.ini | grep port | awk '{print $NF}')"
+        if [ $LAST_PORT -lt 52000 -o $LAST_PORT -ge 60000 ]
+        then 
+            PORT_DESIGN="52000"
+            PORT_AUTOMATION="52010"
+            PORT_API="52020"
+        else
+            PORT_DESIGN=$(($LAST_PORT + 30))
+            PORT_AUTOMATION=$(($LAST_PORT + 40))
+            PORT_API=$(($LAST_PORT + 50))
+        fi
+    fi
+else
+    PORT_AUTOMATION="$(echo "$VERSION" | tr -d .)10"
+    PORT_API="$(echo "$VERSION" | tr -d .)20"
+fi
 
 if [ -z "$LICENSE" ] && [ -z "$DKUDATADIR" ]
 then
