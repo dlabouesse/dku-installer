@@ -51,17 +51,10 @@ then
 fi
 echo
 echo "Installing Dataiku $VERSION..."
-DKUDIR="DSS_$(echo $VERSION | tr . _)"
-echo "Creating $DKUDIR folder..."
-mkdir $DKUDIR
-echo "Extracting $DKUINSTALLER..."
-tar zxf $DKUINSTALLER -C ./$DKUDIR
-cd $DKUDIR
-DKUINSTALLER=$(ls)
 
 PORT_DESIGN="$(echo "$VERSION" | tr -d .)00"
 if [ $PORT_DESIGN -ge 65000 ] #dirty hack not to break old installs ports
-then
+then # Dataiku DSS 7.0.0 and upper versions
     LAST_INSTALL="$(ls -t | grep DSS_ | head -n1)"
     if [ -z "$LAST_INSTALL" ]
     then
@@ -69,7 +62,7 @@ then
         PORT_AUTOMATION="52010"
         PORT_API="52020"
     else
-        LAST_PORT="$(cat $(ls -t | grep DSS_ | head -n1)/dss_home/install.ini | grep port | awk '{print $NF}')"
+        LAST_PORT="$(cat $(ls -r | grep DSS_ | head -n1)/dss_home/install.ini | grep port | awk '{print $NF}')"
         if [ $LAST_PORT -lt 52000 -o $LAST_PORT -ge 60000 ]
         then 
             PORT_DESIGN="52000"
@@ -81,10 +74,18 @@ then
             PORT_API=$(($LAST_PORT + 50))
         fi
     fi
-else
+else # Dataiku DSS versions lower than 7.0.0
     PORT_AUTOMATION="$(echo "$VERSION" | tr -d .)10"
     PORT_API="$(echo "$VERSION" | tr -d .)20"
 fi
+
+DKUDIR="DSS_$(echo $VERSION | tr . _)"
+echo "Creating $DKUDIR folder..."
+mkdir $DKUDIR
+echo "Extracting $DKUINSTALLER..."
+tar zxf $DKUINSTALLER -C ./$DKUDIR
+cd $DKUDIR
+DKUINSTALLER=$(ls)
 
 if [ -z "$LICENSE" ] && [ -z "$DKUDATADIR" ]
 then
