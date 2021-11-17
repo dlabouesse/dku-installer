@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VERSIONS=()
-for f in $(ls -d DSS_*); do
+for f in $((ls -d1 DSS_?_?_? ; ls -d1 DSS_??_?_?) 2> /dev/null); do
     VERSION=$(echo ${f#"DSS_"} | tr _ .)
     VERSIONS+=($VERSION)
 done
